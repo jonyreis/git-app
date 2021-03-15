@@ -1,9 +1,52 @@
 import React from 'react'
-import { StyleSheet, TextInput, SafeAreaView, TouchableOpacity, Text, Image  } from 'react-native'
-
+import { StyleSheet, TextInput, SafeAreaView, TouchableOpacity, Text, View } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 
+import api from '../../services/api'
+
+import { useDispatch } from 'react-redux';
+import { Creators as LoginActions } from '../../store/ducks/login';
+
 export default function Login({ navigation }) {
+  const [input, setInput] = React.useState("")
+  const [isRequiredField, setIsRequeridField] = React.useState(false)
+  const [isStatus, setIsStatus] = React.useState(null)
+
+  const dispatch = useDispatch()
+
+  async function handleSubmit() {
+    try {
+      setIsRequeridField(true)
+      const response = await api.get(`/users/${input}`)
+      if (response.status === 200) {
+        const USER = {
+          login: response.data.login,
+          name: response.data.name,
+          email: response.data.email,
+          location: response.data.location,
+          company: response.data.company,
+          bio: response.data.bio,
+          avatar_url: response.data.avatar_url,
+          followers_url: response.data.followers_url,
+          following_url: response.data.following_url,
+          organizations_url: response.data.organizations_url,
+          starred_url: response.data.starred_url,
+          public_repos: response.data.public_repos,
+          public_gists: response.data.public_gists,
+          followers: response.data.followers,
+          following: response.data.following,
+        }
+        dispatch(LoginActions.addUserAction(USER));
+        dispatch(LoginActions.addAuthenticated({ authenticated: true }));
+      }
+
+      console.log(response.status)
+      console.log(response.data)
+    } catch (error) {
+      setIsStatus(404)
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <AntDesign
@@ -12,14 +55,28 @@ export default function Login({ navigation }) {
         color="#FFCE00"
         style={styles.img}
       />
+      {input.length === 0 && isRequiredField &&
+        <View style={styles.errorcontainer} >
+          <Text style={styles.error} >Campo Obrigatório</Text>
+        </View>
+      }
+      {input.length > 0 && isStatus === 404 &&
+        <View style={styles.errorcontainer} >
+          <Text style={styles.error} >Usuário não encontrado</Text>
+        </View>
+      }
       <TextInput
         placeholder="Usuário"
         placeholderTextColor="#535353"
         placeholderFontSize="20"
         style={styles.input}
-      />
+        autoCapitalize="none"
+        value={input}
+        onChangeText={(value) => setInput(value)}
+        returnKeyType="send"
+        />
       <TouchableOpacity
-        onPress={() => navigation.navigate('Home')}
+        onPress={handleSubmit}
         style={{
           backgroundColor: '#FFCE00',
           borderRadius: 12,
@@ -51,6 +108,15 @@ const styles = StyleSheet.create({
     height: 56,
     padding: 8,
     marginBottom: 20,
+  },
+  errorcontainer: {
+    top: 36,
+    right: -80,
+    zIndex: 1
+
+  },
+  error: {
+    color: 'red',
   },
   img: {
     marginBottom: 48
