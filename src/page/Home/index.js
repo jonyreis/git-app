@@ -6,6 +6,7 @@ import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { Creators as LoginActions } from '../../store/ducks/login';
 import { Creators as ReposActions } from '../../store/ducks/repos';
+import { Creators as FollowersActions } from '../../store/ducks/followers';
 import api from '../../services/api';
 
 const Container = styled.View`
@@ -135,15 +136,25 @@ export default function Home() {
       dispatch(ReposActions.addReposAction(response.data));
     }
 
-    user.login && getRepos(user.login)
+    async function getFollowers(user) {
+      const response = await api.get(`/users/${user}/followers`)
 
-  }, [user])
+      dispatch(FollowersActions.addFollowersAction(response.data));
+    }
 
-  function handleSubmit() {
+    if (user.login) {
+      getRepos(user.login)
+      getFollowers(user.login)
+    }
+
+  }, [])
+
+  function handleSignOut() {
     try {
       dispatch(LoginActions.addUserAction(null));
     dispatch(LoginActions.addAuthenticated(false));
       dispatch(ReposActions.addReposAction([]));
+      dispatch(FollowersActions.addFollowersAction([]));
     } catch (error) {
       console.error(error)
     }
@@ -153,7 +164,7 @@ export default function Home() {
       <Container>
         <ContentSair>
           <LoginText>#{user.login}</LoginText>
-          <ButtonSair onPress={handleSubmit}>
+          <ButtonSair onPress={handleSignOut}>
             <Text style={{
               color: '#fff',
               fontSize: '17px',
@@ -161,7 +172,7 @@ export default function Home() {
               marginRight: '8px',
             }}
             >Sair</Text>
-            <Feather name="log-out" size={20} color="#D03434" />
+            <Feather name="log-out" size={22} color="#D03434" />
           </ButtonSair>
         </ContentSair>
       </Container>
