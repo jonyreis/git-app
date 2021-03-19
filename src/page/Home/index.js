@@ -7,6 +7,8 @@ import styled from 'styled-components/native';
 import { Creators as LoginActions } from '../../store/ducks/login';
 import { Creators as ReposActions } from '../../store/ducks/repos';
 import { Creators as FollowersActions } from '../../store/ducks/followers';
+import { Creators as FollowingActions } from '../../store/ducks/following';
+
 import api from '../../services/api';
 
 const Container = styled.View`
@@ -142,9 +144,16 @@ export default function Home() {
       dispatch(FollowersActions.addFollowersAction(response.data));
     }
 
+    async function getFollowing(user) {
+      const response = await api.get(`/users/${user}/following`)
+
+      dispatch(FollowingActions.addFollowingAction(response.data));
+    }
+
     if (user.login) {
       getRepos(user.login)
       getFollowers(user.login)
+      getFollowing(user.login)
     }
 
   }, [])
@@ -155,6 +164,7 @@ export default function Home() {
     dispatch(LoginActions.addAuthenticated(false));
       dispatch(ReposActions.addReposAction([]));
       dispatch(FollowersActions.addFollowersAction([]));
+      dispatch(FollowingActions.addFollowingAction([]));
     } catch (error) {
       console.error(error)
     }
