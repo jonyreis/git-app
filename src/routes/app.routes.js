@@ -6,7 +6,7 @@ import Home from '../page/Home';
 
 const Tab = createBottomTabNavigator();
 
-const LoginRoutes = () => (
+const AppRoutes = () => (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={Home} />
@@ -18,4 +18,4 @@ const LoginRoutes = () => (
 
 );
 
-export default LoginRoutes;
+export default AppRoutes;
