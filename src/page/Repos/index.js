@@ -1,5 +1,6 @@
 import React from 'react'
 import { Text } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { Feather } from '@expo/vector-icons';
 
@@ -79,23 +80,16 @@ const ContentTypeRepo = styled.View`
 `
 
 export default function Home() {
-  const dispatch = useDispatch()
+  const navigation = useNavigation();
+
   const selector = useSelector(state => state);
   const repos = selector.repos
-
-  function handleSubmit() {
-    try {
-      dispatch(LoginActions.addAuthenticated(false));
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
   return (
     <>
       <ContentVoltar>
-        <ButtonVoltar onPress={handleSubmit}>
-          <Feather name="arrow-left" size={20} color="#FFF" />
+        <ButtonVoltar onPress={() => navigation.goBack()}>
+          <Feather name="arrow-left" size={26} color="#FFF" />
         </ButtonVoltar>
         <Text style={{
           color: '#fff',
