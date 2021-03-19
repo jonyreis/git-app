@@ -1,11 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigation } from '@react-navigation/native';
-import { Image } from 'react-native'
+import { Image, Text } from 'react-native'
 import { Feather } from '@expo/vector-icons';
 
 import styled from 'styled-components/native';
 import { Creators as LoginActions } from '../../store/ducks/login';
+import { Creators as ReposActions } from '../../store/ducks/repos';
+import api from '../../services/api';
 
 const Container = styled.View`
   background-color: #1F1F1F;
@@ -34,16 +35,10 @@ const ButtonSair = styled.TouchableOpacity`
   align-items: center;
 `
 
-const ButtonTextSair = styled.Text`
-  color: #fff;
-  font-size: 17px;
-  font-weight: 400;
-  margin-left: 8px;
-`
-
 const Main = styled.SafeAreaView`
   background-color: #292929;
   height: 80%;
+  margin-top: -1px;
 `
 
 const ContentTitleName = styled.View`
@@ -132,11 +127,23 @@ export default function Home() {
   const navigation = useNavigation()
   const selector = useSelector(state => state);
   const user = selector.login.user
-  console.log(user)
+
+  React.useEffect(() => {
+    async function getRepos(user) {
+      const response = await api.get(`/users/${user}/repos`)
+
+      dispatch(ReposActions.addReposAction(response.data));
+    }
+
+    user.login && getRepos(user.login)
+
+  }, [user])
 
   function handleSubmit() {
     try {
+      dispatch(LoginActions.addUserAction(null));
     dispatch(LoginActions.addAuthenticated(false));
+      dispatch(ReposActions.addReposAction([]));
     } catch (error) {
       console.error(error)
     }
@@ -147,8 +154,14 @@ export default function Home() {
         <ContentSair>
           <LoginText>#{user.login}</LoginText>
           <ButtonSair onPress={handleSubmit}>
+            <Text style={{
+              color: '#fff',
+              fontSize: '17px',
+              fontWeight: '400',
+              marginRight: '8px',
+            }}
+            >Sair</Text>
             <Feather name="log-out" size={20} color="#D03434" />
-            <ButtonTextSair>Sair</ButtonTextSair>
           </ButtonSair>
         </ContentSair>
       </Container>
