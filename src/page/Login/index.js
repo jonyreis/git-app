@@ -48,7 +48,7 @@ const ErrorContainer = styled.View`
 `
 
 const Error = styled.Text`
-  color: 'red';
+  color: red;
 `
 
 export default function Login() {
@@ -81,7 +81,7 @@ export default function Login() {
           following: response.data.following,
         }
         dispatch(LoginActions.addUserAction(USER));
-        dispatch(LoginActions.addAuthenticated({ authenticated: true }));
+        dispatch(LoginActions.addAuthenticated(true));
       }
     } catch (error) {
       setIsStatus('error')

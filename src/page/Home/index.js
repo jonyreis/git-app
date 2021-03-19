@@ -1,20 +1,26 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native'
 import { Feather } from '@expo/vector-icons';
 
 import styled from 'styled-components/native';
+import { Creators as LoginActions } from '../../store/ducks/login';
 
 const Container = styled.View`
   background-color: #1F1F1F;
   width: 100%;
   height: 100%;
   flex: 1;
+  padding: 16px;
+`;
+
+const ContentSair = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 16px;
-`;
+  height: 30px;
+`
 
 const LoginText = styled.Text`
   color: #fff;
@@ -37,22 +43,41 @@ const ButtonTextSair = styled.Text`
 
 const Main = styled.SafeAreaView`
   background-color: #292929;
-  padding: 30px;
   height: 80%;
 `
 
+const ContentTitleName = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-top: 40px;
+`
+
+const ContentTitleBio = styled.View`
+  flex-direction: row;
+  align-items: center;
+`
+
+const Content = styled.View`
+  content: '';
+  display: inline-block;
+  background-color: #FFCE00;
+  width: 20px;
+  height: 42px;
+  border-radius: 33%;
+  margin-right: 20px;
+  margin-left: -12px;
+`
+
 const Name = styled.Text`
-  color: red;
+  color: #FFF;
   font-size: 26px;
+  font-weight: 700;
   text-transform: uppercase;
-  &::before {
-    content: ' ';
-    display: block;
-    background-color: red;
-    width: 20px;
-    height: 30px;
-    z-index: 100;
-  }
+`
+
+const ContentEmailCity = styled.View`
+  margin-block-start: -8px;
+  margin-left: 30px;
 `
 
 const Email = styled.Text`
@@ -67,27 +92,65 @@ const City = styled.Text`
   font-weight: 300;
 `
 
+const ContentInfos = styled.View`
+  background-color: #5252525D;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100vw;
+  height: 96px;
+  margin: 44px 0;
+`
+
+const Info = styled.View`
+  text-align: center;
+`
+
+const TextNumber = styled.Text`
+  color: #fff;
+  font-size: 40px;
+  font-weight: 700;
+`
+
+const TextInfo = styled.Text`
+  color: #fff;
+  font-size: 17px;
+  font-weight: 300;
+`
+
+const TextBio = styled.Text`
+  color: #fff;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 24px;
+  padding: 0 30px;
+  margin-bottom: 70px;
+`
+
 export default function Home() {
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
   const selector = useSelector(state => state);
   const user = selector.login.user
   console.log(user)
 
-  async function handleSubmit() {
+  function handleSubmit() {
     try {
-      dispatch(LoginActions.addUserAction(USER));
-      dispatch(LoginActions.addAuthenticated({ authenticated: false }));
+    dispatch(LoginActions.addAuthenticated(false));
     } catch (error) {
-      setIsStatus('error')
+      console.error(error)
     }
   }
   return (
     <>
       <Container>
-        <LoginText>#{user.login}</LoginText>
-        <ButtonSair onPress={handleSubmit}>
-          <Feather name="log-out" size={20} color="#D03434" />
-          <ButtonTextSair>Sair</ButtonTextSair>
-        </ButtonSair>
+        <ContentSair>
+          <LoginText>#{user.login}</LoginText>
+          <ButtonSair onPress={handleSubmit}>
+            <Feather name="log-out" size={20} color="#D03434" />
+            <ButtonTextSair>Sair</ButtonTextSair>
+          </ButtonSair>
+        </ContentSair>
       </Container>
       <Main>
         <Image
@@ -101,9 +164,33 @@ export default function Home() {
             left: '-57px'
           }}
         />
-        <Name>anilton veiga</Name>
-        <Email>aniltonveiga@gmail.com</Email>
-        <City>Itú/SP</City>
+        <ContentTitleName>
+          <Content />
+          <Name>{user.name}</Name>
+        </ContentTitleName>
+        <ContentEmailCity>
+          <Email>{user.email}</Email>
+          <City>{user.location}</City>
+        </ContentEmailCity>
+        <ContentInfos>
+          <Info >
+            <TextNumber>{user.followers}</TextNumber>
+            <TextInfo>Seguidores</TextInfo>
+          </Info>
+          <Info>
+            <TextNumber>{user.following}</TextNumber>
+            <TextInfo>Seguindo</TextInfo>
+          </Info>
+          <Info>
+            <TextNumber>{user.public_repos}</TextNumber>
+            <TextInfo>Repos</TextInfo>
+          </Info>
+        </ContentInfos>
+        <ContentTitleBio>
+          <Content />
+          <Name>Bio</Name>
+        </ContentTitleBio>
+        <TextBio>{user.bio}</TextBio>
       </Main>
     </>
   )
