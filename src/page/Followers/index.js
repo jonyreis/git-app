@@ -69,7 +69,7 @@ export default function Followers() {
   return (
     <>
       <ContentVoltar>
-        <ButtonVoltar onPress={() => navigation.goBack()}>
+        <ButtonVoltar onPress={() => navigation.navigate('Home')}>
           <Feather name="arrow-left" size={26} color="#FFF" />
         </ButtonVoltar>
         <Text style={{
