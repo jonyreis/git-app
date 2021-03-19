@@ -1,16 +1,60 @@
-import React from 'react'
-import { StyleSheet, TextInput, SafeAreaView, TouchableOpacity, Text, View } from 'react-native'
-import { AntDesign } from '@expo/vector-icons';
-
-import api from '../../services/api'
-
+import React from 'react';
 import { useDispatch } from 'react-redux';
+import { AntDesign } from '@expo/vector-icons';
+import styled from 'styled-components/native';
+
+import api from '../../services/api';
+
 import { Creators as LoginActions } from '../../store/ducks/login';
 
-export default function Login({ navigation }) {
+const Container = styled.View`
+  background-color: #292929;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Button = styled.TouchableOpacity`
+  background-color: #FFCE00;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 56px;
+`
+
+const ButtonText = styled.Text`
+  color: #000;
+  font-size: 20px;
+  font-weight: 700;
+`
+
+const Input = styled.TextInput`
+  background-color: #fff;
+  border-radius: 12px;
+  font-size: 20px;
+  width: 90%;
+  height: 56px;
+  padding: 8px;
+  margin-bottom: 20px;
+`
+
+const ErrorContainer = styled.View`
+  top: 36px;
+  right: -80px;
+  z-index: 1;
+`
+
+const Error = styled.Text`
+  color: 'red';
+`
+
+export default function Login() {
   const [input, setInput] = React.useState("")
   const [isRequiredField, setIsRequeridField] = React.useState(false)
-  const [isStatus, setIsStatus] = React.useState(null)
+  const [isStatus, setIsStatus] = React.useState("")
 
   const dispatch = useDispatch()
 
@@ -39,86 +83,41 @@ export default function Login({ navigation }) {
         dispatch(LoginActions.addUserAction(USER));
         dispatch(LoginActions.addAuthenticated({ authenticated: true }));
       }
-
-      console.log(response.status)
-      console.log(response.data)
     } catch (error) {
-      setIsStatus(404)
+      setIsStatus('error')
     }
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Container>
       <AntDesign
         name="github"
         size={98}
         color="#FFCE00"
-        style={styles.img}
+        style={{ marginBottom: 48 }}
       />
       {input.length === 0 && isRequiredField &&
-        <View style={styles.errorcontainer} >
-          <Text style={styles.error} >Campo Obrigatório</Text>
-        </View>
+        <ErrorContainer>
+          <Error>Campo Obrigatório</Error>
+        </ErrorContainer>
       }
-      {input.length > 0 && isStatus === 404 &&
-        <View style={styles.errorcontainer} >
-          <Text style={styles.error} >Usuário não encontrado</Text>
-        </View>
+      {input.length > 0 && isStatus === 'error' &&
+        <ErrorContainer>
+          <Error>Usuário não encontrado</Error>
+        </ErrorContainer>
       }
-      <TextInput
+      <Input
         placeholder="Usuário"
         placeholderTextColor="#535353"
         placeholderFontSize="20"
-        style={styles.input}
         autoCapitalize="none"
         value={input}
         onChangeText={(value) => setInput(value)}
         returnKeyType="send"
         />
-      <TouchableOpacity
-        onPress={handleSubmit}
-        style={{
-          backgroundColor: '#FFCE00',
-          borderRadius: 12,
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '90%',
-          height: 56
-        }}>
-        <Text style={{ fontSize: 20, fontWeight: "700", color: '#000' }}>Entrar</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+      <Button onPress={handleSubmit}>
+        <ButtonText>Entrar</ButtonText>
+      </Button>
+    </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#292929',
-    width: '100%',
-    height: '100%',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  input: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    fontSize: 20,
-    width: '90%',
-    height: 56,
-    padding: 8,
-    marginBottom: 20,
-  },
-  errorcontainer: {
-    top: 36,
-    right: -80,
-    zIndex: 1
-
-  },
-  error: {
-    color: 'red',
-  },
-  img: {
-    marginBottom: 48
-  }
-})
