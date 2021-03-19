@@ -5,8 +5,7 @@ import { Feather } from '@expo/vector-icons';
 
 import Home from '../page/Home';
 import Repos from '../page/Repos';
-import Seguidores from '../page/Seguidores';
-import Seguindo from '../page/Seguindo';
+import Followers from '../page/Followers';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +23,7 @@ const AppRoutes = () => (
               case 'Repos':
                 iconName = 'github';
                 break;
-              case 'Seguidores':
+              case 'Followers':
                 iconName = 'users';
                 break;
               case 'Seguindo':
@@ -55,8 +54,7 @@ const AppRoutes = () => (
     >
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="Repos" component={Repos} />
-        <Tab.Screen name="Seguidores" component={Seguidores} />
-        <Tab.Screen name="Seguindo" component={Seguindo} />
+        <Tab.Screen name="Followers" component={Followers} />
         </Tab.Navigator>
     </NavigationContainer>
 

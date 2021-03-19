@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Image, Text } from 'react-native'
 import { Feather } from '@expo/vector-icons';
 
@@ -60,7 +60,7 @@ const Name = styled.Text`
 `
 
 
-export default function Home() {
+export default function Followers() {
   const navigation = useNavigation();
 
   const selector = useSelector(state => state);
