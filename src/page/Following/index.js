@@ -7,6 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 
 import { Creators as AnotherFollowingActions } from '../../store/ducks/anotherFollowing';
+import { FlatList } from 'react-native-gesture-handler';
 
 const ContentVoltar = styled.View`
   background-color: #1F1F1F;
@@ -91,25 +92,28 @@ export default function Following() {
         >{following.length} seguindo</Text>
       </ContentVoltar>
       <Main>
-      {following.map((item) => (
-        <FollowingContainer key={item.id}>
-          <Content />
-          <Image
-            source={{ uri: item.avatar_url, }}
-            style={{
+      <FlatList
+        data={following}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) =>
+          <FollowingContainer key={item.id}>
+            <Content />
+            <Image
+              source={{ uri: item.avatar_url, }}
+              style={{
                 border: "3px solid #fff",
                 borderRadius: "32px",
                 width: "64px",
                 height: "64px",
                 marginRight: "32px"
               }}
-          />
-          <Name>#{item.login}</Name>
-          <ButtonEntrar onPress={() => handleFollowing(item.login)}>
-            <Feather name="arrow-right" size={22} color="#FFF" />
-          </ButtonEntrar>
-        </FollowingContainer>
-      ))}
+            />
+            <Name>#{item.login}</Name>
+            <ButtonEntrar onPress={() => handleFollowing(item.login)}>
+              <Feather name="arrow-right" size={22} color="#FFF" />
+            </ButtonEntrar>
+          </FollowingContainer>
+        }/>
       </Main>
     </>
   )
