@@ -30,9 +30,10 @@ const ContentSalvar = styled.View`
   align-items: center;
   height: 30px;
   position: absolute;
-  top: 20px;
+  top: 16px;
   right: 16px;
 `
+
 const ButtonVoltar = styled.TouchableOpacity`
   position: absolute;
   top: 20px;
@@ -157,7 +158,6 @@ export default function Home({ route }) {
 
   const widthLogin = String(anotherUserData.login).length
 
-  console.log(anotherUserData.login, widthLogin)
   React.useEffect(() => {
     const user = route.name === "Seguidores" ? anotherFollower : anotherFollowing
 
@@ -186,26 +186,22 @@ export default function Home({ route }) {
     }
     callAnother()
 
-
   }, [])
 
   function handleSalvar() {
     try {
-      // dispatch(route.name === "Seguidores" ?
-      //   AnotherFollowersActions.addFollowersAction(anotherUserData.login)
-      //   :
-      //   AnotherFollowingActions.addFollowingAction(anotherUserData.login))
-
-
       dispatch(LoginActions.addUserAction(anotherUserData));
       dispatch(LoginActions.addAuthenticated(true))
-      navigation.navigate("Home")
+      navigation.navigate('Home', {
+        otherParam: 'update',
+      });
       dispatch(AnotherFollowersActions.removeFollowersAction(""))
       dispatch(AnotherFollowingActions.removeFollowingAction(""))
     } catch (error) {
       console.error(error)
     }
   }
+
   function handleGoBack() {
     navigation.navigate("Home")
     dispatch(route.name === "Seguidores" ?
@@ -213,6 +209,7 @@ export default function Home({ route }) {
       :
       AnotherFollowingActions.removeFollowingAction(""))
   }
+
   return (
     <>
       <Container>

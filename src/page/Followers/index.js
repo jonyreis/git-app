@@ -61,7 +61,6 @@ const Name = styled.Text`
   font-weight: 700;
 `
 
-
 export default function Followers() {
   const dispatch = useDispatch();
   const navigation = useNavigation();

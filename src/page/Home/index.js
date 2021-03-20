@@ -125,9 +125,8 @@ const TextBio = styled.Text`
   margin-bottom: 70px;
 `
 
-export default function Home() {
+export default function Home({ route }) {
   const dispatch = useDispatch()
-  const navigation = useNavigation()
   const selector = useSelector(state => state);
   const user = selector.login.user
 
@@ -150,18 +149,16 @@ export default function Home() {
       dispatch(FollowingActions.addFollowingAction(response.data));
     }
 
-    if (user.login) {
-      getRepos(user.login)
-      getFollowers(user.login)
-      getFollowing(user.login)
-    }
+    getRepos(user.login)
+    getFollowers(user.login)
+    getFollowing(user.login)
 
-  }, [])
+  }, [route.params])
 
   function handleSignOut() {
     try {
       dispatch(LoginActions.addUserAction(null));
-    dispatch(LoginActions.addAuthenticated(false));
+      dispatch(LoginActions.addAuthenticated(false));
       dispatch(ReposActions.addReposAction([]));
       dispatch(FollowersActions.addFollowersAction([]));
       dispatch(FollowingActions.addFollowingAction([]));
