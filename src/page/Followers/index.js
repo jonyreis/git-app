@@ -7,6 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 
 import { Creators as AnotherFollowersActions } from '../../store/ducks/anotherFollowers';
+import { FlatList } from 'react-native-gesture-handler';
 
 const ContentVoltar = styled.View`
   background-color: #1F1F1F;
@@ -89,25 +90,28 @@ export default function Followers() {
         >{followers.length} seguidores</Text>
       </ContentVoltar>
       <Main>
-      {followers.map((item) => (
-        <FollowersContainer key={item.id}>
-          <Content />
-          <Image
-            source={{ uri: item.avatar_url, }}
-            style={{
-                border: "3px solid #fff",
-                borderRadius: "32px",
-                width: "64px",
-                height: "64px",
-                marginRight: "32px"
-              }}
-          />
-          <Name>#{item.login}</Name>
-          <ButtonEntrar onPress={() => handleFollower(item.login)}>
-            <Feather name="arrow-right" size={22} color="#FFF" />
-          </ButtonEntrar>
-        </FollowersContainer>
-      ))}
+      <FlatList
+          data={followers}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) =>
+            <FollowersContainer key={item.id}>
+              <Content />
+              <Image
+                source={{ uri: item.avatar_url, }}
+                style={{
+                  border: "3px solid #fff",
+                  borderRadius: "32px",
+                  width: "64px",
+                  height: "64px",
+                  marginRight: "32px"
+                }}
+              />
+              <Name>#{item.login}</Name>
+              <ButtonEntrar onPress={() => handleFollower(item.login)}>
+                <Feather name="arrow-right" size={22} color="#FFF" />
+              </ButtonEntrar>
+            </FollowersContainer>
+          }/>
       </Main>
     </>
   )
