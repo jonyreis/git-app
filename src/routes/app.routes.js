@@ -3,14 +3,22 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
 
+import { useSelector } from 'react-redux'
+
 import Home from '../page/Home';
 import Repos from '../page/Repos';
 import Followers from '../page/Followers';
 import Following from '../page/Following';
+import Follows from '../page/Follows';
 
 const Tab = createBottomTabNavigator();
 
-const AppRoutes = () => (
+const AppRoutes = () => {
+  const selector = useSelector(state => state);
+  const anotherFollowers = selector.anotherFollowersUser.name
+  const anotherFollowing = selector.anotherFollowingUser.name
+
+  return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -24,7 +32,7 @@ const AppRoutes = () => (
               case 'Repos':
                 iconName = 'github';
                 break;
-              case 'Followers':
+              case 'Seguidores':
                 iconName = 'users';
                 break;
               case 'Seguindo':
@@ -55,10 +63,11 @@ const AppRoutes = () => (
     >
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="Repos" component={Repos} />
-        <Tab.Screen name="Seguindo" component={Following} />
+        <Tab.Screen name="Seguidores" component={anotherFollowers ? Follows : Followers} />
+        <Tab.Screen name="Seguindo" component={anotherFollowing ? Follows : Following} />
         </Tab.Navigator>
     </NavigationContainer>
-
-);
+  )
+}
 
 export default AppRoutes;

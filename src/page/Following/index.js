@@ -1,10 +1,12 @@
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useSelector } from 'react-redux'
+import { useDispatch ,useSelector } from 'react-redux'
 import { Image, Text } from 'react-native'
 import { Feather } from '@expo/vector-icons';
 
 import styled from 'styled-components/native';
+
+import { Creators as AnotherFollowingActions } from '../../store/ducks/anotherFollowing';
 
 const ContentVoltar = styled.View`
   background-color: #1F1F1F;
@@ -61,10 +63,16 @@ const Name = styled.Text`
 
 
 export default function Following() {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const selector = useSelector(state => state);
   const following = selector.following
+
+  function handleFollowing(follower) {
+    console.log(follower)
+    dispatch(AnotherFollowingActions.addFollowingAction(follower))
+  }
 
   return (
     <>
@@ -97,7 +105,7 @@ export default function Following() {
               }}
           />
           <Name>#{item.login}</Name>
-          <ButtonEntrar>
+          <ButtonEntrar onPress={() => handleFollowing(item.login)}>
             <Feather name="arrow-right" size={22} color="#FFF" />
           </ButtonEntrar>
         </FollowingContainer>
