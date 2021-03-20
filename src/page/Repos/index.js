@@ -1,11 +1,11 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Feather } from '@expo/vector-icons';
 
 import styled from 'styled-components/native';
-import { Creators as LoginActions } from '../../store/ducks/login';
+import { FlatList } from 'react-native-gesture-handler';
 
 const ContentVoltar = styled.View`
   background-color: #1F1F1F;
@@ -25,7 +25,7 @@ const ButtonVoltar = styled.TouchableOpacity`
   left: 16px;
 `
 
-const Main = styled.SafeAreaView`
+const Main = styled.View`
   margin-top: -1px;
 `
 const ReposContainer = styled.View`
@@ -102,33 +102,37 @@ export default function Home() {
         >{repos.length} repositórios</Text>
       </ContentVoltar>
       <Main>
-        {repos.map((item) => (
+        <FlatList
+          data={repos}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) =>
           <ReposContainer key={item.id}>
             <ContentTitleRepo>
               <Content />
               <Name>{item.name}</Name>
             </ContentTitleRepo>
-            <Description>{item.description}</Description>
-            <ContentInfoRepo>
-              <ContentTypeRepo>
-                <Feather name="star" size={24} color="#FFCE00" />
-                <Text style={{
-                  color: '#fff',
-                  fontSize: '15px',
-                  fontWeight: '300',
-                  marginLeft: '8px'
-                }}>{item.stargazers_count}</Text>
-              </ContentTypeRepo>
-              <ContentTypeRepo>
-                {item.private ?
-                  <Feather name="lock" size={24} color="#CC042A" />
-                :
-                  <Feather name="unlock" size={24} color="#63BF1F" style={{marginRight: '8px'}} />
-                }
-              </ContentTypeRepo>
-            </ContentInfoRepo>
-          </ReposContainer>
-        ))}
+             <Description>{item.description}</Description>
+             <ContentInfoRepo>
+               <ContentTypeRepo>
+                 <Feather name="star" size={24} color="#FFCE00" />
+                 <Text style={{
+                   color: '#fff',
+                   fontSize: '15px',
+                   fontWeight: '300',
+                   marginLeft: '8px'
+                 }}>{item.stargazers_count}</Text>
+               </ContentTypeRepo>
+               <ContentTypeRepo>
+                 {item.private ?
+                   <Feather name="lock" size={24} color="#CC042A" />
+                 :
+                   <Feather name="unlock" size={24} color="#63BF1F" style={{marginRight: '8px'}} />
+                 }
+               </ContentTypeRepo>
+             </ContentInfoRepo>
+           </ReposContainer>
+        }
+      />
       </Main>
     </>
   )
